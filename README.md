@@ -26,5 +26,5 @@ Sidebar filters: date range, vehicle type, payment method, booking status.
 
 ## Notes
 - Revenue figures count successful rides only (cancelled rides carry a booking value in the raw data).
-- The 10 SQL answers live in `ola_queries.sql` (SQLite syntax); they are not part of the app.
+- The 10 SQL answers live in `ola_queries.sql` (portable SQL: SQLite, MySQL 8, SQL Server); they are not part of the app.
 - Run locally: `pip install -r requirements.txt` then `streamlit run app.py`.

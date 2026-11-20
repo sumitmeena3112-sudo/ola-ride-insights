@@ -1,4 +1,4 @@
--- OLA Ride Insights: SQL answers (SQLite syntax; table `rides`, built by clean_data.py)
+-- OLA Ride Insights: SQL answers (portable SQL: runs on SQLite, MySQL 8 and SQL Server; table `rides`, built by clean_data.py)
 
 -- 1. All successful bookings
 SELECT * FROM rides WHERE Booking_Status = 'Success';
@@ -11,8 +11,16 @@ FROM rides GROUP BY Vehicle_Type ORDER BY avg_distance DESC;
 SELECT COUNT(*) AS cancelled_by_customers FROM rides WHERE Booking_Status = 'Canceled by Customer';
 
 -- 4. Top 5 customers by number of rides
-SELECT Customer_ID, COUNT(Booking_ID) AS total_rides
-FROM rides GROUP BY Customer_ID ORDER BY total_rides DESC, Customer_ID LIMIT 5;
+SELECT Customer_ID, total_rides
+FROM (
+    SELECT Customer_ID,
+           COUNT(Booking_ID) AS total_rides,
+           ROW_NUMBER() OVER (ORDER BY COUNT(Booking_ID) DESC, Customer_ID) AS rn
+    FROM rides
+    GROUP BY Customer_ID
+) AS ranked
+WHERE rn <= 5
+ORDER BY rn;
 
 -- 5. Rides cancelled by drivers: personal & car related issues
 SELECT COUNT(*) AS driver_cancel_personal_car
